@@ -1,4 +1,5 @@
 const { response } = require("express");
+const lodash = require('lodash')
 // server.js
 // This is where your node app starts
 
@@ -19,15 +20,47 @@ app.get("/", function (request, response) {
 
 //START OF YOUR CODE...
 
+app.get('/quotes', function(request, response) {
+  response.send(quotes);
+});
+
+app.get('/quotes/random', function(request, response) {
+  response.send(thislibraryiscalledlodashpleaseuseeit.sample(quotes))
+ // response.send(pickFromArray(quotes));
+});
+
+
+app.get( "/quotes/search", function (request, response){
+  let term= request.query.term
+  if(term){
+    term= term.toLowerCase();
+}
+  console.log(term)
+const filteredQuotes = quotes.filter(element => {
+  return element.author.toLowerCase().includes(term) ||  element.quote.toLowerCase().includes(term);
+
+})
+if (filteredQuotes.length === 0){
+  response.status(404).send(filteredQuotes)
+}
+  response.send(filteredQuotes)
+})
+
+
+
+
+
+
+
 //...END OF YOUR CODE
 
 //You can use this function to pick one element at random from a given array
 //example: pickFromArray([1,2,3,4]), or
 //example: pickFromArray(myContactsArray)
 //
-function pickFromArray(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
+// function pickFromArray(arr) {
+//   return arr[Math.floor(Math.random() * arr.length)];
+// }
 
 //Start our server so that it listens for HTTP requests!
 let port = 5000;
